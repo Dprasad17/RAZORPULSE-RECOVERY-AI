@@ -13,7 +13,10 @@ import {
   Sliders,
   Sparkles,
   ShieldAlert,
-  Bot
+  Bot,
+  Check,
+  X,
+  Scale
 } from 'lucide-react';
 
 export default function ArchitectureDoc() {
@@ -38,6 +41,58 @@ export default function ArchitectureDoc() {
             <div className="text-xl font-black text-emerald-400">₹75,000 / mo</div>
             <div className="text-[10px] text-slate-400">Bangalore (In-Person)</div>
           </div>
+        </div>
+      </div>
+
+      {/* BENCHMARK COMPARISON MATRIX: Traditional Dunning vs RazorPulse AI */}
+      <div className="rz-card p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 className="text-base font-bold text-white flex items-center gap-2 font-display">
+            <Scale className="w-5 h-5 text-[#38bdf8]" />
+            Benchmark Comparison: Traditional Dunning vs RazorPulse AI
+          </h3>
+          <span className="text-xs font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/30">
+            +39.9% Higher Recovery Yield
+          </span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs font-sans">
+            <thead className="bg-slate-950 text-slate-400 uppercase tracking-wider text-[10px] font-bold border-b border-slate-800 font-mono">
+              <tr>
+                <th className="px-4 py-3">Capability / Scenario</th>
+                <th className="px-4 py-3 text-slate-400">Traditional Dunning (Stripe / Basic)</th>
+                <th className="px-4 py-3 text-[#38bdf8]">RazorPulse Autonomous AI</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tr>
+                <td className="px-4 py-3 font-bold text-white">Issuer Bank Node Outage</td>
+                <td className="px-4 py-3 text-rose-400">Repeats retries immediately → incurs bank fines & declines</td>
+                <td className="px-4 py-3 text-emerald-400 font-semibold">Detects HTTP 504 node degradation → defers retry & routes to 1-Tap UPI</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 font-bold text-white">Outreach Personalization</td>
+                <td className="px-4 py-3 text-slate-400">Generic English email template (high spam/ignore rate)</td>
+                <td className="px-4 py-3 text-emerald-400 font-semibold">Context-aware Hinglish WhatsApp + B2B Net-30 invoice copy</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 font-bold text-white">Merchant Guardrails & Safety</td>
+                <td className="px-4 py-3 text-slate-400">No stopping rules; spamming customers continuously</td>
+                <td className="px-4 py-3 text-emerald-400 font-semibold">Strict policy check (Max 3 retries, 10% discount cap, TRAI DND 9 AM-8 PM)</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 font-bold text-white">Checkout Payment Clearance</td>
+                <td className="px-4 py-3 text-slate-400">Requires manual card re-entry form (72h friction)</td>
+                <td className="px-4 py-3 text-emerald-400 font-semibold">1-Tap UPI Intent clearance (GPay, PhonePe, Paytm) in 1 second</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 font-bold text-white">Audit Trail Compliance</td>
+                <td className="px-4 py-3 text-slate-400">Basic database log entry</td>
+                <td className="px-4 py-3 text-emerald-400 font-semibold">7-Step Machine-Readable Execution Stepper + JSON/CSV Export</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 

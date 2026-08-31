@@ -23,7 +23,8 @@ import {
   X,
   Sparkles,
   Zap,
-  Building2
+  Building2,
+  Download
 } from 'lucide-react';
 
 export default function CampaignsList({ campaigns = [], onNavigateToCustomerPortal }) {
@@ -56,6 +57,16 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const handleExportAuditJSON = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(campaigns, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `razorpulse_audit_log_${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
   return (
     <div className="space-y-6">
       {/* Directory Metric Cards Header */}
@@ -85,7 +96,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
         </div>
       </div>
 
-      {/* Control Toolbar: Search, Filters & Grid/Table Switcher */}
+      {/* Control Toolbar: Search, Filters, Export & Grid/Table Switcher */}
       <div className="rz-card p-4 bg-[#080d1a] border border-[#0284c7]/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-1">
           <div className="relative flex-1 max-w-md">
@@ -116,26 +127,36 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
           </div>
         </div>
 
-        {/* View Mode Toggle */}
-        <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl p-1 text-xs">
+        {/* Export JSON Audit Button & View Mode Toggle */}
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setViewMode('grid')}
-            className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-              viewMode === 'grid' ? 'bg-[#0284c7] text-white' : 'text-slate-400 hover:text-white'
-            }`}
-            title="Grid Cards View"
+            onClick={handleExportAuditJSON}
+            className="px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-xs font-bold font-mono flex items-center gap-1.5 cursor-pointer"
+            title="Download Machine Readable JSON Audit Logs"
           >
-            <LayoutGrid className="w-4 h-4" />
+            <Download className="w-3.5 h-3.5" /> Export Audit Log (.JSON)
           </button>
-          <button
-            onClick={() => setViewMode('table')}
-            className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-              viewMode === 'table' ? 'bg-[#0284c7] text-white' : 'text-slate-400 hover:text-white'
-            }`}
-            title="Data Table View"
-          >
-            <List className="w-4 h-4" />
-          </button>
+
+          <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl p-1 text-xs">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                viewMode === 'grid' ? 'bg-[#0284c7] text-white' : 'text-slate-400 hover:text-white'
+              }`}
+              title="Grid Cards View"
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('table')}
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                viewMode === 'table' ? 'bg-[#0284c7] text-white' : 'text-slate-400 hover:text-white'
+              }`}
+              title="Data Table View"
+            >
+              <List className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
