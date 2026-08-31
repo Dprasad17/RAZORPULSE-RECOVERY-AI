@@ -36,11 +36,6 @@ export default function ArchitectureDoc() {
               Autonomous Multi-Agent Revenue Recovery Engine with Deterministic Batch Telemetry & Policy Guardrails
             </p>
           </div>
-          <div className="p-3 rounded-2xl bg-[#0284c7]/10 border border-[#0284c7]/30 text-right font-mono">
-            <div className="text-xs text-slate-400">Target Role Stipend</div>
-            <div className="text-xl font-black text-emerald-400">₹75,000 / mo</div>
-            <div className="text-[10px] text-slate-400">Bangalore (In-Person)</div>
-          </div>
         </div>
       </div>
 
