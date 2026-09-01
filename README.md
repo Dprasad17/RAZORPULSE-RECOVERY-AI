@@ -3,7 +3,7 @@
 > **Razorpay AI Builder Internship 2026 Submission — Track 3 (AI Revenue Recovery)**  
 > *Target Role Stipend: ₹75,000/mo (Bangalore)*
 
-[![Build Status](https://img.shields.io/badge/Build-Passing-emerald?style=for-the-badge&logo=github)](https://github.com/Dprasad17/RAZORPULSE-RECOVERY-AI)
+[![Build Status](https://github.com/Dprasad17/RAZORPULSE-RECOVERY-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/Dprasad17/RAZORPULSE-RECOVERY-AI/actions)
 [![Track](https://img.shields.io/badge/Razorpay--Buildathon-Track--3--Revenue--Recovery-0284c7?style=for-the-badge)](https://forms.gle/d9r2gvxp8cmoZhon9)
 [![Engine Version](https://img.shields.io/badge/Engine-v2.4.0-38bdf8?style=for-the-badge)](file:///c:/RAZORPAY/server/recoveryEngine.js)
 [![Recovery Yield](https://img.shields.io/badge/Batch--Yield-74.9%25-10b981?style=for-the-badge)](file:///c:/RAZORPAY/src/components/RecoverySimulator.jsx)

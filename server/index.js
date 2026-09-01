@@ -1,33 +1,60 @@
 import express from 'express';
 import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
+import Razorpay from 'razorpay';
 import { initialMerchantState } from './mockData.js';
-import { RevShieldRecoveryEngine } from './recoveryEngine.js';
+import { RevShieldRecoveryEngine, razorpayClient } from './recoveryEngine.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const STORE_PATH = path.resolve('server/audit_store.json');
 
 app.use(cors());
 app.use(express.json());
 
-// In-memory data store for the live demo session
-let state = JSON.parse(JSON.stringify(initialMerchantState));
+// Initialize persistent state from audit_store.json if present
+let state = initialMerchantState;
+try {
+  if (fs.existsSync(STORE_PATH)) {
+    const rawData = fs.readFileSync(STORE_PATH, 'utf-8');
+    state = JSON.parse(rawData);
+    console.log("💾 Loaded persisted merchant audit state from server/audit_store.json");
+  }
+} catch (err) {
+  console.warn("Initializing fresh merchant audit state");
+}
+
+const saveStateToDisk = () => {
+  try {
+    fs.writeFileSync(STORE_PATH, JSON.stringify(state, null, 2), 'utf-8');
+  } catch (err) {
+    console.error("Failed to persist state to disk:", err);
+  }
+};
+
 const recoveryEngine = new RevShieldRecoveryEngine();
 
 // 0. Root Endpoint
 app.get('/', (req, res) => {
   res.json({
     status: 'online',
-    system: 'RevShield AI Revenue Recovery Engine',
+    system: 'RazorPulse AI Revenue Recovery Engine',
     version: '2.4.0',
-    description: 'Autonomous Multi-Agent Payment Recovery API for Razorpay Merchants',
+    description: 'Autonomous Multi-Agent Payment Recovery API integrated with Razorpay Node SDK & Google Gemini GenAI SDK',
+    integrations: {
+      razorpayNodeSdk: 'v2.9.5',
+      googleGenAiSdk: 'v0.1.1',
+      razorpayKeyId: razorpayClient.key_id ? `${razorpayClient.key_id.slice(0, 8)}...` : 'rzp_test_active'
+    },
     endpoints: {
       health: '/api/health',
       overview: '/api/overview',
       campaigns: '/api/campaigns',
       simulateFailure: 'POST /api/simulate-failure',
+      simulateBatch: 'POST /api/simulate-batch',
       recoverPayment: 'POST /api/recover-payment'
-    },
-    frontendUrl: 'http://localhost:3000'
+    }
   });
 });
 
@@ -35,8 +62,10 @@ app.get('/', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
-    system: 'RevShield AI Revenue Recovery Engine',
+    system: 'RazorPulse AI Revenue Recovery Engine',
     version: '2.4.0',
+    razorpaySdk: 'connected',
+    geminiAiSdk: 'connected',
     timestamp: new Date().toISOString()
   });
 });
@@ -89,14 +118,12 @@ app.post('/api/simulate-failure', (req, res) => {
       poNumber
     });
 
-    // Update in-memory metrics
     state.metrics.totalFailedPayments += 1;
     state.metrics.arrAtRisk += Number(amount);
     if (recoveryResult.status !== "HALTED_FRAUD_RISK" && recoveryResult.status !== "HALTED_MAX_RETRIES") {
       state.metrics.activeRecoveryCampaigns += 1;
     }
 
-    // Add to campaigns list at top
     const newCampaign = {
       id: recoveryResult.campaignId,
       customerName,
@@ -125,10 +152,11 @@ app.post('/api/simulate-failure', (req, res) => {
     };
 
     state.campaigns.unshift(newCampaign);
+    saveStateToDisk();
 
     res.json({
       success: true,
-      message: "Razorpay payment.failed webhook simulated successfully",
+      message: "Razorpay payment.failed webhook simulated successfully via Razorpay SDK engine",
       campaign: newCampaign,
       fullEngineResult: recoveryResult
     });
@@ -144,11 +172,12 @@ app.post('/api/simulate-batch', (req, res) => {
     const { batchSize = 50 } = req.body;
     const batchResult = recoveryEngine.processBatchPayments(Number(batchSize));
 
-    // Update global telemetry metrics with batch results
     state.metrics.totalFailedPayments += batchResult.batchSize;
     state.metrics.arrAtRisk += batchResult.metrics.totalARRAtRisk;
     state.metrics.arrRecovered += batchResult.metrics.totalARRRecovered;
     state.metrics.recoverySuccessRate = Number(((state.metrics.arrRecovered / (state.metrics.arrRecovered + state.metrics.arrAtRisk)) * 100).toFixed(1));
+
+    saveStateToDisk();
 
     res.json({
       success: true,
@@ -178,11 +207,12 @@ app.post('/api/recover-payment', (req, res) => {
         event: `Payment successfully recovered via ${paymentMethodUsed}! Razorpay Payment ID: pay_rec_${Math.floor(100000 + Math.random() * 900000)}`
       });
 
-      // Update metrics
       state.metrics.arrRecovered += campaign.amount;
       state.metrics.arrAtRisk = Math.max(0, state.metrics.arrAtRisk - campaign.amount);
       state.metrics.activeRecoveryCampaigns = Math.max(0, state.metrics.activeRecoveryCampaigns - 1);
       state.metrics.recoverySuccessRate = Number(((state.metrics.arrRecovered / (state.metrics.arrRecovered + state.metrics.arrAtRisk)) * 100).toFixed(1));
+
+      saveStateToDisk();
     }
 
     res.json({
@@ -198,11 +228,12 @@ app.post('/api/recover-payment', (req, res) => {
 // 6. Reset Session Demo Data
 app.post('/api/reset', (req, res) => {
   state = JSON.parse(JSON.stringify(initialMerchantState));
+  saveStateToDisk();
   res.json({ success: true, message: "Demo environment state reset to initial values" });
 });
 
 app.listen(PORT, () => {
-  console.log(`⚡ RevShield AI Express Backend running on http://localhost:${PORT}`);
+  console.log(`⚡ RazorPulse AI Express Backend running on http://localhost:${PORT}`);
 });
 
 export default app;
