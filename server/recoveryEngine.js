@@ -586,7 +586,7 @@ export class RevShieldRecoveryEngine {
         dunningContent: { incentiveCode: null },
         recoveryLink,
         isGeminiUsed: false,
-        isRzpSdkUsed: true
+        isRzpSdkUsed: false
       });
 
       itemizedResults.push({
