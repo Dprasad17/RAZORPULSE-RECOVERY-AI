@@ -6,7 +6,9 @@
 
 ## 🎯 Code Path & Computation Source
 
-All recovery metrics are **dynamically computed in real-time** by the multi-agent backend engine in [`server/recoveryEngine.js`](file:///c:/RAZORPAY/server/recoveryEngine.js#L420-L490) inside method `processBatchPayments(batchSize)`.
+All recovery metrics are **dynamically computed** by the multi-agent backend engine in [`server/recoveryEngine.js`](file:///c:/RAZORPAY/server/recoveryEngine.js#L513-L625) inside `processBatchPayments(batchSize)` using a seeded PRNG (`seed = 123456789`).
+
+> *Note: The 50-transaction batch runner uses deterministic PRNG simulation for instant 100% reproducible metrics, while single-transaction sandbox webhooks (`POST /api/simulate-failure`) invoke live Google Gemini GenAI LLM & Razorpay SDK APIs.*
 
 ### 1. Mathematical Formulas
 $$\text{Total ARR at Risk} = \sum_{i=1}^{N} \text{Amount}_i$$
