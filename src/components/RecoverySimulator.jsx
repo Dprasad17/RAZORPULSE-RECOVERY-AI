@@ -380,7 +380,7 @@ export default function RecoverySimulator({ onSimulate, onNavigateToCustomerPort
                                 <div className="text-[10px] text-slate-400">{item.plan}</div>
                               </td>
                               <td className="px-4 py-3 font-bold text-white">₹{item.amount.toLocaleString('en-IN')}</td>
-                              <td className="px-4 py-3 text-slate-300">{item.failureCategory}</td>
+                              <td className="px-4 py-3 text-slate-300">{item.category || item.failureCategory || "Failed Payment"}</td>
                               <td className="px-4 py-3">
                                 {item.status === 'RECOVERED' && (
                                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">RECOVERED</span>
@@ -413,7 +413,7 @@ export default function RecoverySimulator({ onSimulate, onNavigateToCustomerPort
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-7 gap-2 text-[11px]">
-                                      {item.machineAuditTrail.map((stepObj) => (
+                                      {(item.machineAuditTrail || []).map((stepObj) => (
                                         <div key={stepObj.step} className="p-2 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
                                           <div className="text-[10px] font-bold text-[#38bdf8]">0{stepObj.step} {stepObj.stage}</div>
                                           <div className="text-[10px] text-slate-300 font-sans leading-snug">{stepObj.detail}</div>
@@ -428,9 +428,9 @@ export default function RecoverySimulator({ onSimulate, onNavigateToCustomerPort
                                       <HelpCircle className="w-3.5 h-3.5" /> AI DECISION RATIONALE
                                     </div>
                                     <p className="text-slate-300 text-[11px]">
-                                      {item.failureCategory.includes("Outage")
+                                      {(item.category || item.failureCategory || "").includes("Outage")
                                         ? "Bank gateway node degradation detected. Repeating card transaction has low recovery probability. Deferring retry & routing to 1-Tap UPI Intent provides higher conversion."
-                                        : item.failureCategory.includes("Decline")
+                                        : (item.category || item.failureCategory || "").includes("Decline")
                                         ? "Soft decline detected (insufficient balance). Triggering gentle nudge with 5% instant clearance incentive (REV5OFF)."
                                         : "Hard decline or policy boundary reached. Halting automated attempts to prevent bank penalty fees."}
                                     </p>
