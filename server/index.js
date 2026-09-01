@@ -85,7 +85,7 @@ app.get('/api/campaigns', (req, res) => {
 });
 
 // 4. Simulate a Failed Payment Webhook (Interactive Judge Sandbox)
-app.post('/api/simulate-failure', (req, res) => {
+app.post('/api/simulate-failure', async (req, res) => {
   try {
     const {
       customerName = "Priya Nambiar",
@@ -102,7 +102,7 @@ app.post('/api/simulate-failure', (req, res) => {
       poNumber = null
     } = req.body;
 
-    const recoveryResult = recoveryEngine.processFailedPayment({
+    const recoveryResult = await recoveryEngine.processFailedPayment({
       customerId: `cust_${Math.floor(1000 + Math.random() * 9000)}`,
       customerName,
       email,
