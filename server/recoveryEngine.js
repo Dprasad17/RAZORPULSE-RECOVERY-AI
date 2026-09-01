@@ -246,8 +246,8 @@ export class RevShieldRecoveryEngine {
     };
   }
 
-  evaluateStoppingRules(incidentData, diagnosis, isSimulatedDaytime = false) {
-    const currentHour = isSimulatedDaytime ? 14 : new Date().getHours();
+  evaluateStoppingRules(incidentData, diagnosis, customHour = null) {
+    const currentHour = (customHour !== null && customHour !== undefined) ? customHour : new Date().getHours();
     const isDndHours = currentHour >= this.policyConfig.dndStartHour || currentHour < this.policyConfig.dndEndHour;
 
     if (diagnosis.category === "Hard Decline / Fraud Risk") {
@@ -550,7 +550,8 @@ export class RevShieldRecoveryEngine {
       const isB2B = selectedCat.name.includes("B2B");
 
       const diagnosis = this.diagnoseFailure(selectedCat.code, selectedCat.err, amount, isB2B);
-      const policyCheck = this.evaluateStoppingRules({ failureCode: selectedCat.code, retryCount: 1, amount }, diagnosis, true);
+      const simulatedHour = (i >= batchSize - Math.round(batchSize * 0.1)) ? 22 : (9 + (i % 10));
+      const policyCheck = this.evaluateStoppingRules({ failureCode: selectedCat.code, retryCount: 1, amount }, diagnosis, simulatedHour);
       const retryStrategy = this.determineRetryStrategy(diagnosis, "card", policyCheck);
 
       const isRecovered = !policyCheck.isHalted && !policyCheck.isDeferred;
