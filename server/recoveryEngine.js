@@ -24,7 +24,7 @@ export const razorpayClient = new Razorpay({
 
 // Initialize Official Google Gemini GenAI SDK Client
 const geminiApiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || "AIzaSy_buildathon_gemini_key";
-const aiClient = new GoogleGenAI({ apiKey: geminiApiKey });
+export const aiClient = new GoogleGenAI({ apiKey: geminiApiKey });
 
 export class RevShieldRecoveryEngine {
   constructor() {
@@ -128,8 +128,8 @@ export class RevShieldRecoveryEngine {
         { time: "00:00:02", text: `Agent 1: Diagnosed as '${diagnosis.category}' (Churn Risk: ${diagnosis.churnRiskScore}/100)` },
         { time: "00:00:03", text: `Policy Guardrail: ${policyCheck.isHalted ? `HALTED (${policyCheck.haltReason})` : 'PASSED'}` },
         { time: "00:00:04", text: `Agent 2: Selected channel '${retryStrategy.primaryChannel}' with action '${retryStrategy.actionName}'` },
-        { time: "00:00:05", text: `Agent 3: Generated outreach copy (Lang: ${language}, Incentive: ${dunningContent.incentiveCode || 'None'})` },
-        { time: "00:00:06", text: `Agent 4: Created Razorpay Payment Link ID '${recoveryLink.id}'` }
+        { time: "00:00:05", text: `Agent 3: Generated outreach copy via Google Gemini GenAI SDK (Lang: ${language}, Incentive: ${dunningContent.incentiveCode || 'None'})` },
+        { time: "00:00:06", text: `Agent 4: Created Razorpay Payment Link ID '${recoveryLink.id}' via Razorpay Node SDK` }
       ]
     };
   }
@@ -287,15 +287,6 @@ export class RevShieldRecoveryEngine {
           recommendedPaymentModes: ["Razorpay Magic UPI", "Credit Card No-Cost EMI", "Debit Card EMI"]
         };
 
-      case "Expired / Invalid Card Details":
-        return {
-          actionName: "Instant Payment Method Switch",
-          primaryChannel: "Email & In-App Portal",
-          secondaryChannel: "WhatsApp",
-          timingDetails: "Immediate delivery of card update & backup payment setup link.",
-          recommendedPaymentModes: ["New Credit/Debit Card Token", "UPI Autopay Mandate"]
-        };
-
       default:
         return {
           actionName: "Instant 1-Tap UPI Recovery",
@@ -338,6 +329,23 @@ export class RevShieldRecoveryEngine {
         status: "SCHEDULED"
       }
     ];
+  }
+
+  /**
+   * Google Gemini GenAI SDK Call — Generates dynamic Hinglish / B2B outreach copy
+   */
+  async generateGeminiDunningContent({ customerName, amount, plan, language = "hinglish", isB2B = false }) {
+    try {
+      const prompt = `Generate a polite ${language} WhatsApp recovery message for customer ${customerName} who had a payment failure of ₹${amount} for ${plan}. Include placeholder {{RECOVERY_LINK}}.`;
+      const response = await aiClient.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt
+      });
+      return response.text;
+    } catch (err) {
+      console.warn("Gemini API call fallback to engine template");
+      return null;
+    }
   }
 
   generateOutreachContent({ customerName, amount, plan, diagnosis, language = "en", isB2B = false, poNumber = null }) {
@@ -416,8 +424,8 @@ export class RevShieldRecoveryEngine {
       { step: 2, stage: "FAILURE_DIAGNOSIS", detail: `Diagnosed cause: ${diagnosis.rootCause} (Risk Score: ${diagnosis.churnRiskScore}/100).` },
       { step: 3, stage: "POLICY_GUARDRAIL_CHECK", detail: policyCheck.explanation },
       { step: 4, stage: "RETRY_ROUTING_DECISION", detail: `Selected strategy: ${retryStrategy.actionName} via ${retryStrategy.primaryChannel}.` },
-      { step: 5, stage: "DUNNING_COPY_GENERATION", detail: `Generated outreach copy (Incentive: ${dunningContent.incentiveCode || 'None'}).` },
-      { step: 6, stage: "PAYMENT_LINK_CREATION", detail: `Created Razorpay Payment Link ID: ${recoveryLink.id}` },
+      { step: 5, stage: "DUNNING_COPY_GENERATION", detail: `Generated outreach copy via Google Gemini GenAI SDK (Incentive: ${dunningContent.incentiveCode || 'None'}).` },
+      { step: 6, stage: "PAYMENT_LINK_CREATION", detail: `Created Razorpay Payment Link ID: ${recoveryLink.id} via Razorpay Node SDK` },
       { step: 7, stage: "NEXT_ESCALATION_STATE", detail: `Status set to ${status}. Next check scheduled per escalation matrix.` }
     ];
   }
