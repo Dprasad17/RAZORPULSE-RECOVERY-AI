@@ -1,0 +1,325 @@
+{
+  "merchantInfo": {
+    "name": "AuraCloud SaaS & E-Commerce",
+    "merchantId": "mid_razor_98241",
+    "tier": "Enterprise Merchant",
+    "currency": "INR",
+    "activeSubscriptions": 14200,
+    "monthlyARR": 4850000
+  },
+  "metrics": {
+    "arrAtRisk": 693499,
+    "arrRecovered": 492100,
+    "recoverySuccessRate": 71.9,
+    "totalFailedPayments": 343,
+    "activeRecoveryCampaigns": 49,
+    "avgRecoveryTimeHours": 4.2
+  },
+  "failureReasonsDistribution": [
+    {
+      "category": "Soft Decline (Insufficient Funds / Limit)",
+      "percentage": 38,
+      "count": 130,
+      "color": "#3a86ff"
+    },
+    {
+      "category": "Bank Network Outage / Downtime",
+      "percentage": 26,
+      "count": 89,
+      "color": "#f59e0b"
+    },
+    {
+      "category": "Card Expired / Invalid Details",
+      "percentage": 18,
+      "count": 62,
+      "color": "#ec4899"
+    },
+    {
+      "category": "Razorpay Mandate Drop / Autopay Auth",
+      "percentage": 12,
+      "count": 41,
+      "color": "#8b5cf6"
+    },
+    {
+      "category": "OTP Timeout & Customer Abandonment",
+      "percentage": 6,
+      "count": 20,
+      "color": "#ef4444"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "cmp_199148",
+      "customerName": "Priya Nambiar",
+      "email": "priya.nambiar@startup.in",
+      "phone": "+91 98112 23344",
+      "amount": 8999,
+      "plan": "Growth SaaS Annual",
+      "failedAt": "2026-09-01T19:45:57.426Z",
+      "failureReason": "bank_outage",
+      "failureReasonText": "HDFC Bank NetBanking Gateway Degradation (HTTP 504)",
+      "riskScore": 35,
+      "status": "DEFERRED_DND_HOURS",
+      "channelUsed": "WhatsApp",
+      "agentActionSummary": "Defer automated retries for 60 minutes. Dispatch 1-tap UPI Intent payment link to bypass issuer node.",
+      "recoveryLink": "http://localhost:3000/#/recover/cmp_199148",
+      "recoveryLinkId": "plink_rzp_596647",
+      "recoveredAt": null,
+      "discountApplied": "None",
+      "policyCheck": {
+        "isHalted": false,
+        "haltReason": null,
+        "isDeferred": true,
+        "deferUntil": "09:00 AM IST",
+        "explanation": "Policy Guardrail: TRAI DND operating hours (20:00 - 09:00 IST). Outreach deferred until 09:00 AM IST.",
+        "policyRuleViolated": "RULE_03_TRAI_DND_WINDOW"
+      },
+      "escalationMatrix": [
+        {
+          "stage": 1,
+          "title": "Stage 1: Silent Bank Wait",
+          "timeframe": "+0 to +60 Mins",
+          "action": "Suppress automatic card retries to avoid bank penalty fees during node degradation.",
+          "status": "COMPLETED"
+        },
+        {
+          "stage": 2,
+          "title": "Stage 2: 1-Tap UPI Nudge",
+          "timeframe": "+1 Hour",
+          "action": "Dispatch personalized WhatsApp message with 1-tap Razorpay UPI Intent link.",
+          "status": "ACTIVE"
+        },
+        {
+          "stage": 3,
+          "title": "Stage 3: Dynamic Waiver Offer",
+          "timeframe": "+48 Hours",
+          "action": "Apply 5% clearance incentive (REV5OFF) if payment remains unrecovered.",
+          "status": "SCHEDULED"
+        },
+        {
+          "stage": 4,
+          "title": "Stage 4: Final Notice & Deferral",
+          "timeframe": "+72 Hours",
+          "action": "Final respectful notification before pausing automated recovery to avoid customer churn.",
+          "status": "SCHEDULED"
+        }
+      ],
+      "machineAuditTrail": [
+        {
+          "step": 1,
+          "stage": "TRANSACTION_INGESTION",
+          "detail": "Webhook received & campaign cmp_199148 initialized."
+        },
+        {
+          "step": 2,
+          "stage": "FAILURE_DIAGNOSIS",
+          "detail": "Diagnosed cause: HDFC Bank NetBanking Gateway Degradation (HTTP 504) (Risk Score: 35/100)."
+        },
+        {
+          "step": 3,
+          "stage": "POLICY_GUARDRAIL_CHECK",
+          "detail": "Policy Guardrail: TRAI DND operating hours (20:00 - 09:00 IST). Outreach deferred until 09:00 AM IST."
+        },
+        {
+          "step": 4,
+          "stage": "RETRY_ROUTING_DECISION",
+          "detail": "Selected strategy: Uptime-Synced Smart Delay via WhatsApp."
+        },
+        {
+          "step": 5,
+          "stage": "DUNNING_COPY_GENERATION",
+          "detail": "Generated outreach copy via Rule-Based Policy Engine (Incentive: None)."
+        },
+        {
+          "step": 6,
+          "stage": "PAYMENT_LINK_CREATION",
+          "detail": "Created Razorpay Payment Link ID 'plink_rzp_596647' via Test Gateway Client."
+        },
+        {
+          "step": 7,
+          "stage": "NEXT_ESCALATION_STATE",
+          "detail": "Status set to DEFERRED_DND_HOURS. Next check scheduled per escalation matrix."
+        }
+      ],
+      "timeline": [
+        {
+          "time": "00:00:01",
+          "event": "Razorpay payment.failed webhook received for Priya Nambiar (₹8999)"
+        },
+        {
+          "time": "00:00:02",
+          "event": "Agent 1: Diagnosed as 'Bank Network Outage' (Churn Risk: 35/100)"
+        },
+        {
+          "time": "00:00:03",
+          "event": "Policy Guardrail: PASSED"
+        },
+        {
+          "time": "00:00:04",
+          "event": "Agent 2: Selected channel 'WhatsApp' with action 'Uptime-Synced Smart Delay'"
+        },
+        {
+          "time": "00:00:05",
+          "event": "Agent 3: Generated outreach copy via Bounded Policy Rule-Based Template"
+        },
+        {
+          "time": "00:00:06",
+          "event": "Agent 4: Created Razorpay Payment Link ID 'plink_rzp_596647' via Test Gateway Client"
+        }
+      ],
+      "rawDiagnosis": {
+        "category": "Bank Network Outage",
+        "rootCause": "HDFC Bank NetBanking Gateway Degradation (HTTP 504)",
+        "isTransient": true,
+        "churnRiskScore": 35,
+        "recommendation": "Defer automated retries for 60 minutes. Dispatch 1-tap UPI Intent payment link to bypass issuer node.",
+        "technicalSignal": "ISSUER_NODE_504_TIMEOUT"
+      },
+      "rawRetryStrategy": {
+        "actionName": "Uptime-Synced Smart Delay",
+        "primaryChannel": "WhatsApp",
+        "secondaryChannel": "Email",
+        "timingDetails": "Queue automated retry in 60 mins during verified bank uptime window.",
+        "recommendedPaymentModes": [
+          "Razorpay Magic Checkout",
+          "UPI Intent (PhonePe/GPay)",
+          "NetBanking Alternate Node"
+        ]
+      },
+      "rawDunningContent": {
+        "whatsappText": "Namaste Priya Nambiar ji! Aapka Growth SaaS Annual ka ₹8,999 payment bank network slowdown ke waja se pause ho gaya. 🏦\n\nAapki service active hai! 1-sec mein Google Pay / PhonePe UPI se clear karein: http://localhost:3000/#/recover/cmp_199148",
+        "emailSubject": "Important: Aapka Growth SaaS Annual payment bank server issue se delay hua",
+        "emailBody": "Dear Priya Nambiar,\n\nAapka Growth SaaS Annual renewal payment (₹8,999) bank gateway slowdown ke waja se complete nahi ho paya.\n\nAap niche diye gaye Razorpay 1-tap UPI link se payment immediately complete kar sakte hain:\n\nhttp://localhost:3000/#/recover/cmp_199148\n\nDhanyawad,\nAuraCloud Billing Team",
+        "incentiveCode": null
+      }
+    },
+    {
+      "id": "REC-89021",
+      "customerName": "Vikram Malhotra",
+      "email": "vikram.m@techcorp.in",
+      "phone": "+91 98765 43210",
+      "amount": 14999,
+      "plan": "Pro Scale Annual (SaaS)",
+      "failedAt": "2026-08-27T18:30:00Z",
+      "failureReason": "bank_outage",
+      "failureReasonText": "HDFC Bank NetBanking Gateway Timeout (HTTP 504)",
+      "riskScore": 84,
+      "status": "RECOVERED",
+      "channelUsed": "WhatsApp + UPI Intent Link",
+      "agentActionSummary": "Diagnosed bank outage. Paused immediate auto-retry. Triggered WhatsApp recovery with 1-click Razorpay UPI Intent link at 08:00 PM during bank uptime.",
+      "recoveredAt": "2026-08-27T20:15:00Z",
+      "discountApplied": "None (Outage Retry)",
+      "timeline": [
+        {
+          "time": "18:30",
+          "event": "Razorpay Webhook payment.failed received (Err: BANK_GATEWAY_DOWN)"
+        },
+        {
+          "time": "18:31",
+          "event": "AI Diagnoser Agent flagged high-value subscription churn risk (Risk Score: 84/100)"
+        },
+        {
+          "time": "18:31",
+          "event": "AI Smart Scheduler queued retry for 20:00 after verifying HDFC node recovery"
+        },
+        {
+          "time": "20:00",
+          "event": "AI Conversational Agent dispatched WhatsApp interactive UPI payment link"
+        },
+        {
+          "time": "20:15",
+          "event": "Customer completed payment via Google Pay UPI (Payment ID: pay_P9812401)"
+        }
+      ]
+    },
+    {
+      "id": "REC-89022",
+      "customerName": "Ananya Sharma",
+      "email": "ananya.design@studio.com",
+      "phone": "+91 99887 76655",
+      "amount": 4999,
+      "plan": "Creator Suite Monthly",
+      "failedAt": "2026-08-27T19:10:00Z",
+      "failureReason": "insufficient_funds",
+      "failureReasonText": "Card Payment Declined: Insufficient Balance / Credit Limit",
+      "riskScore": 62,
+      "status": "IN_RECOVERY",
+      "channelUsed": "Email + WhatsApp Smart Offer",
+      "agentActionSummary": "Diagnosed soft decline. Scheduled gentle reminder + offered flexible payment method update (UPI / EMI option).",
+      "recoveredAt": null,
+      "discountApplied": "REV5OFF (5% Instant Waiver)",
+      "timeline": [
+        {
+          "time": "19:10",
+          "event": "Razorpay Webhook subscription.halted received"
+        },
+        {
+          "time": "19:11",
+          "event": "AI Agent selected soft-nudge strategy with 5% discount incentive valid for 6 hrs"
+        },
+        {
+          "time": "19:12",
+          "event": "Email & WhatsApp dispatched with single-tap Razorpay recovery checkout link"
+        }
+      ]
+    },
+    {
+      "id": "REC-89023",
+      "customerName": "Rohan Varma",
+      "email": "rohan.v@growthx.co",
+      "phone": "+91 91234 56789",
+      "amount": 28500,
+      "plan": "Enterprise Add-on Seats",
+      "failedAt": "2026-08-27T20:00:00Z",
+      "failureReason": "card_expired",
+      "failureReasonText": "Visa Credit Card Expired (08/26)",
+      "riskScore": 78,
+      "status": "ACTION_REQUIRED",
+      "channelUsed": "In-App Banner + Priority Email",
+      "agentActionSummary": "Detected card expiry. AI generated direct credit card update modal link without requiring full re-authentication.",
+      "recoveredAt": null,
+      "discountApplied": "None",
+      "timeline": [
+        {
+          "time": "20:00",
+          "event": "Razorpay Webhook invoice.payment_failed received (ERR_EXPIRED_CARD)"
+        },
+        {
+          "time": "20:01",
+          "event": "AI Card Updater Agent sent secure payment method update link"
+        }
+      ]
+    },
+    {
+      "id": "REC-89024",
+      "customerName": "Neha Kulkarni",
+      "email": "neha.k@fintech.io",
+      "phone": "+91 97654 32109",
+      "amount": 12000,
+      "plan": "API Usage Tier 2",
+      "failedAt": "2026-08-27T16:45:00Z",
+      "failureReason": "mandate_failed",
+      "failureReasonText": "E-Mandate Execution Failed: Customer Bank Auth Required",
+      "riskScore": 91,
+      "status": "RECOVERED",
+      "channelUsed": "WhatsApp AI Bot",
+      "agentActionSummary": "Mandate re-authorization required. Interactive WhatsApp Bot guided user to re-approve auto-debit in 2 taps.",
+      "recoveredAt": "2026-08-27T17:20:00Z",
+      "discountApplied": "None",
+      "timeline": [
+        {
+          "time": "16:45",
+          "event": "Razorpay e-mandate transaction rejected by NPCI"
+        },
+        {
+          "time": "16:46",
+          "event": "WhatsApp AI Bot initiated mandate re-registration flow"
+        },
+        {
+          "time": "17:20",
+          "event": "Mandate successfully re-authorized via PhonePe Mandate Hub"
+        }
+      ]
+    }
+  ]
+}

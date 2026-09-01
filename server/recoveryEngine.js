@@ -60,7 +60,7 @@ export class RevShieldRecoveryEngine {
     // Node-safe URL resolver (prevents ReferenceError: window is not defined on server)
     const appUrl = (typeof window !== 'undefined' && window.location && window.location.origin) 
       ? window.location.origin 
-      : (process.env.APP_URL || 'http://localhost:3000');
+      : (process.env.APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'));
 
     // Step 1: Agent 1 — Failure Diagnosis & Risk Scoring
     const diagnosis = this.diagnoseFailure(failureCode, rawErrorMessage, amount, isB2B);
